@@ -1,27 +1,26 @@
 from util.assertions import *
+import attr
+import typing
+import numpy as np
 
-#@attr.s(frozen=True, auto_attribs = True)
+@attr.s(frozen=True)
 class Stream:
     """ Specifies user browsing behavior in the absence of advertising as first order Markov chain. """
 
-    def __init__(self,activity_states, initial_probabilities, transition_matrix):
-        """
-        :param activity_states: possible user browsing activities as list of strings,
-                                e.g. ["search", "site visit", "conversion"].
-        :param initial_probabilities: probabilities how users begin browsing stream
-        :param transition_matrix: probabilities of transition from any given activity state to another as [[numpy.matrix]]
+    activity_states = attr.ib(type=typing.List[str])
+    """Possible user browsing activities as list of strings,  e.g. ["search", "site visit", "conversion"]"""
 
-        """
-        assert_all_strings(activity_states)
-        assert_distribution(initial_probabilities)
-        assert len(activity_states) == len(initial_probabilities)
+    initial_probabilities = attr.ib(convert=assert_distribution)
+    """probabilities how users begin browsing stream"""
 
-        self.activity_states = activity_states
-        self.initial_probabilities = initial_probabilities
-        self.transition_matrix = transition_matrix
 
-    def __str__(self):
-         return '{} transformed by {}'.format(
-            list(zip(self.activity_states,self.initial_probabilities)),
-            self.transition_matrix
+    def assert_all(self, attribute, value):
+        assert_same(
+            len(self.activity_states),
+            len(self.initial_probabilities),
+            value.shape[0],
+            value.shape[1]
         )
+
+    transition_matrix = attr.ib(type=np.matrix, validator=assert_all)
+    """probabilities of transition from any given activity state to another as [[numpy.matrix]]"""

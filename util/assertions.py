@@ -7,9 +7,15 @@ def approx(x,y):
 
 def assert_non_negative(lis):
     assert all(x >= 0 for x in lis), 'Not all elements non-negative: {}'.format(lis)
-
+    return lis
 
 def assert_distribution(lis):
     """Asserts lis contains non_negative numbers that sum to 1."""
     assert_non_negative(lis)
     assert approx(sum(lis),1.0), 'Numbers of probability distribution do not sum to 1.0: {}'.format(sum(lis))
+    return lis
+
+
+def assert_same(*args):
+    assert len(set(args)) == 1
+    return args
