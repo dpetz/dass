@@ -4,6 +4,9 @@ Implement [DASS] Digital Advertising System Simulation as a RESTful Python micro
 
 ## Project Log
 
+###  Feb 26
+
+- Addind Ad Serving Model
 
 ### Feb 22:
 - Do to  limited app scope and simplicity prefer [Flask over Django](https://www.codementor.io/garethdwyer/flask-vs-django-why-flask-might-be-better-4xs7mdf8v)
