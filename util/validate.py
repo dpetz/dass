@@ -56,11 +56,19 @@ def counter(n):
     assert n >= 0, 'Negative counter: {}'.format(n)
     return n
 
-def transition_matrix(mat,n=0):
-    assert type(mat) is np.ndarray, 'Not an np.ndarray: {}'.format(type(mat))
-    if n:
-        assert n == mat.shape[0]
-    assert mat.shape[0] == mat.shape[1], '{} rows but {} columns: {}'.format(mat.shape[0], mat.shape[1],mat)
-    np.apply_along_axis(distribution,1,mat) # by row
+def size(elems,length):
+    """Assert len(elems) == length. """
+    assert len(elems) == length, '{} entries expected: {}'.format(elems,length)
 
-    return mat
+def transition_matrix(rows,n=0):
+    """Assert rows is a valid transition matrix for a Markov process.
+
+       :param n: Expected number of states. 0 (default) if not to be checked. """
+    if n:
+        size(rows,n)
+    else:
+        n = len(rows)
+    for row in rows:
+        size(row,n)
+        distribution(row)
+    return rows

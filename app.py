@@ -13,15 +13,14 @@ def startpage():
 @app.route('/stream')
 def stream(n=100):
     states = ["search", "site visit", "conversion"]
-    init = [0.6,0.3,0.1]
-    transitions = np.array([[0.3,0.7,0],[0.2,0.6,0.2],[0,0,1.0]])
-    stream = Stream(states, init,transitions)
-    return stream.simulate(n).__str__()
+    init = [.6,.3,.1]
+    transitions = [[.3,.7,0.],[.2,.6,.2],[0.,0.,1.]]
+    return Stream(states, init,transitions).simulate(n).__str__()
 
 @app.route('/ads')
 def ads():
     states = ['GDN', 'PLA']
-    ad = AdType('display',states, 0.2, 0.1, 5)
+    ad = AdType('display',states, .2, .1, 5)
     return ad.__str__()
 
 

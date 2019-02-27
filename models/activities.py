@@ -30,7 +30,7 @@ class Stream:
         validate.same(
             len(self.activity_states),
             len(self.initial_probabilities),
-            self.transition_matrix.shape[0]
+            len(self.transition_matrix)
         )
 
     def find_absorbing_states(self):
