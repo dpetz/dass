@@ -49,26 +49,25 @@ def same(*objs):
     assert len(set(objs)) == 1
     return objs
 
-
 def counter(n):
     """Assert n is an int and non-negative"""
     assert type(n) is int
     assert n >= 0, 'Negative counter: {}'.format(n)
     return n
 
-def size(elems,length):
+def length(elems,n):
     """Assert len(elems) == length. """
-    assert len(elems) == length, '{} entries expected: {}'.format(elems,length)
+    assert len(elems) == n, '{} entries expected: {}'.format(elems,n)
 
 def transition_matrix(rows,n=0):
     """Assert rows is a valid transition matrix for a Markov process.
 
        :param n: Expected number of states. 0 (default) if not to be checked. """
     if n:
-        size(rows,n)
+        length(rows,n)
     else:
         n = len(rows)
     for row in rows:
-        size(row,n)
+        length(row,n)
         distribution(row)
     return rows

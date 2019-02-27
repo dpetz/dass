@@ -6,10 +6,10 @@ Implement [DASS] Digital Advertising System Simulation as a RESTful Python micro
 
 ###  Feb 26/27
 
-- Add Ad Serving Model
+- Create Ad Serving Model
 - Replace [attr] type annotations by validators and converters
-- Decide for TinyDB as a lean document database
-- simulate streams
+- Decide for [TinyDB] as a lean document database
+- simulate activity streams (w/o ads)
 
 ### Feb 22:
 - Due to limited app scope and simplicity prefer [Flask over Django](https://www.codementor.io/garethdwyer/flask-vs-django-why-flask-might-be-better-4xs7mdf8v)
@@ -35,6 +35,4 @@ Implement [DASS] Digital Advertising System Simulation as a RESTful Python micro
 [flask docs]: http://flask.pocoo.org/docs/1.0/
 [flask-restful]: https://flask-restful.readthedocs.io/en/latest/
 [attr]: https://www.attrs.org/en/stable/
-
-
-https://ai.google/research/pubs/pub45766
+[TinyDB]: https://tinydb.readthedocs.io/en/latest/index.html

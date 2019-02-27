@@ -14,13 +14,11 @@ class Stream:
     initial_probabilities = attr.ib(convert=validate.distribution)
     """probabilities how users begin browsing stream"""
 
-    # @todo: assert at least one  absorbing state
-    # @todo: assert rows and columns are probabilities
     # @todo: assert at least one conversion state and at least two site visit states
     # @todo: assert conversions follow site visit
     # @todo: assert no transitions to ads
 
-    # @todo user specific matrices, e.g. buyers have higher impressability
+    # @todo user specific matrices, e.g. buyers have higher impressibility
     # @todo custom rules, e.g. transitions to video watching only from 3rd party website
 
     transition_matrix = attr.ib(convert=validate.transition_matrix)

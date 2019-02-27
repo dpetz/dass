@@ -12,10 +12,10 @@ def startpage():
 
 @app.route('/stream')
 def stream(n=100):
-    states = ["search", "site visit", "conversion"]
-    init = [.6,.3,.1]
-    transitions = [[.3,.7,0.],[.2,.6,.2],[0.,0.,1.]]
-    return Stream(states, init,transitions).simulate(n).__str__()
+    states = ["search", "site visit", "conversion",'churn']
+    init = [.6,.3,.1,0.]
+    transitions = [[.3,.5,0.,.2],[.2,.6,.1,.1],[0.,0.,1.,0.],[0.,0.,0.,1.]]
+    return Stream(states,init,transitions).simulate(n).__str__()
 
 @app.route('/ads')
 def ads():
