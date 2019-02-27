@@ -7,15 +7,16 @@ from models.ads import AdType
 app = Flask(__name__)
 
 @app.route('/')
-def hello_world():
-    return 'Hello World!'
+def startpage():
+    return stream()
 
 @app.route('/stream')
-def stream():
+def stream(n=100):
     states = ["search", "site visit", "conversion"]
-    init_probs = [0.6,0.3,0.1]
-    transitions = np.matrix('0.3 0.7 0; 0.2 0.6 0.2; 0 0 1.0')
-    return Stream(states, init_probs,transitions).__str__()
+    init = [0.6,0.3,0.1]
+    transitions = np.array([[0.3,0.7,0],[0.2,0.6,0.2],[0,0,1.0]])
+    stream = Stream(states, init,transitions)
+    return stream.simulate(n).__str__()
 
 @app.route('/ads')
 def ads():
