@@ -1,15 +1,26 @@
-def all_strings(elems):
-    assert all(isinstance(s, str) for s in elems)
-    return elems
+from functools import partial
+
+def tuple_of(type,obj=None):
+    """
+    If ``obj`` is provided asserts if its a tuple and its elements are of provided type.
+    Otherwise returns a partial functional bound to provided type with single argument obj.
+    """
+    if obj:
+        assert isinstance(obj,tuple)
+        assert isinstance(obj[0],type)
+        return obj
+    else:
+        return partial(tuple_of,type)
 
 
 def approx(x,y, precision=0.00000001):
-    """Tests x == y within floating point error tolerance """
+    """Tests `x == y`` within floating point error tolerance """
     return abs(x - y) < precision
 
 
-def forall(objs, f):
-    all(f(obj) for obj in objs), "'{}' failed for some of: {}".format(f.__name__,objs)
+def forall(iterable, f):
+    """ Calls ``f`` for all elements of ``iterable``"""
+    all(f(obj) for obj in iterable), "'{}' failed for some of: {}".format(f.__name__,iterable)
 
 
 def iterable(obj):

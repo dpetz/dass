@@ -1,5 +1,5 @@
 import random
-from functools import partial
+# from functools import partial
 from util.validate import *
 import attr
 
