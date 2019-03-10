@@ -1,26 +1,23 @@
-from util import validate
+from util import validate, stats
 import attr
-import typing
+
+from util.stats import *
 
 from attr.validators import instance_of
 
-@attr.s(frozen=True)
-class Ads:
-    ad_types = attr.ib(type=typing.List[str])
-    """Possible user browsing activities as list of strings,  e.g. ["search", "display", "video"]"""
 
 @attr.s(frozen=True)
-class AdType:
+class Ad:
     name = attr.ib(validator=instance_of(str))
     """" Unique name of this ad type. """
 
     states = attr.ib(convert=validate.all_strings)
     """ Set of Activity states on which this ad type can be shown. """
 
-    impressibility = attr.ib(convert=validate.probability)
-    """ Minimum user impressibility threshold for the app to be shown (within range [0,1]). """
+    impressibility_threshold = attr.ib(convert=assert_probability)
+    """ Minimum user impressibility required for the app to be shown (within range [0,1]). """
 
-    share_of_voice = attr.ib(convert=validate.probability)
+    share_of_voice = attr.ib(convert=assert_probability)
     """ Probability that ad is actually served to an eligible target user,
         i.e. a users that meets the minimum ``impressibility`` threshold of the ad type. """
 
