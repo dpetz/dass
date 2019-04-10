@@ -1,16 +1,26 @@
-from functools import partial
 
-def tuple_of(type,obj=None):
+def check_values(data ,predicates):
     """
-    If ``obj`` is provided asserts if its a tuple and its elements are of provided type.
-    Otherwise returns a partial functional bound to provided type with single argument obj.
+    If all functions evaluate true when applied to data of same key
+    :param data: dictionary of data
+    :param predicates: dictionary of functions
+    :return:
     """
-    if obj:
-        assert isinstance(obj,tuple)
-        assert isinstance(obj[0],type)
-        return obj
-    else:
-        return partial(tuple_of,type)
+    return all(predicates[k](data[k]) for k in predicates.keys())
+
+def many(f):
+    """Returns function that checks if input contains instances of cls"""
+    return lambda iter: all(map(f, iter))
+
+
+def cls(cls):
+    """ Returns function that checks if input is an instance of cls"""
+    return lambda obj:  isinstance(obj, cls)
+
+
+def aligned(iter):
+    """If all elements of iter have equal length"""
+    return same(len(i) for i in iter)
 
 
 def approx(x,y, precision=0.00000001):
@@ -18,31 +28,23 @@ def approx(x,y, precision=0.00000001):
     return abs(x - y) < precision
 
 
-def forall(iterable, f):
+def foreach(iter, f):
     """ Calls ``f`` for all elements of ``iterable``"""
-    all(f(obj) for obj in iterable), "'{}' failed for some of: {}".format(f.__name__,iterable)
+    for obj in iter:
+        f(obj)
 
 
 def iterable(obj):
-    """Check if this is iterable, ie. iter(obj) will work"""
+    """If this is iterable, ie. iter(obj) will work"""
     return hasattr(obj, '__iter__') or hasattr(obj, '__getitem__')
     # @todo: not all requirements checked, see https://www.programiz.com/python-programming/methods/built-in/iter
 
 
 def same(*objs):
-    """ Assert all element are equal. """
-    assert len(set(objs)) == 1
-    return objs
+    """ If all are equal. """
+    return len(set(objs)) == 1
 
 
 def counter(n):
-    """Assert n is an int and non-negative"""
-    assert type(n) is int
-    assert n >= 0, 'Negative counter: {}'.format(n)
-    return n
-
-
-def length(elems,n):
-    """Asserts len(elems) == length. Returns n."""
-    assert len(elems) == n, '{} entries expected: {}'.format(elems,n)
-    return n
+    """If n is non-negative int """
+    return isinstance(n, int) and (n >= 0)
