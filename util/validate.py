@@ -1,26 +1,57 @@
+""" Defines validators or functions that create validators.
+A validator is a function that when applied to data returns
+a list either containing detected problems or empty otherwise. """
 
-def check_values(data ,predicates):
+
+from collections import Sequence
+
+
+def apply_assert(validator, data):
+    """Asserts data via validator."""
+    result = validator(data)
+    assert not result, f'{result}'
+
+
+def seq_not_str(obj):
+    """If obj is sequence but not string."""
+    if isinstance(obj, str):
+        return False
+    return isinstance(obj, Sequence)
+
+
+def join(lists):
+    """Chains and materializes lists"""
+    from itertools import chain
+    return [e for e in chain(*lists)]
+
+
+def values(validator_dict):
     """
-    If all functions evaluate true when applied to data of same key
-    :param data: dictionary of data
-    :param predicates: dictionary of functions
+    Collects messages from all validators when applied to data of same key
+    :param data_dict: dictionary of data
+    :param validator_dict: dictionary of functions
     :return:
     """
-    return all(predicates[k](data[k]) for k in predicates.keys())
+    return lambda data_dict:\
+        join(validator_dict[k](data_dict[k]) for k in validator_dict.keys())
 
-def many(f):
-    """Returns function that checks if input contains instances of cls"""
-    return lambda iter: all(map(f, iter))
+
+def seq(f):
+    """Returns function that evaluates f to all elements of an iterable and returns list of messages """
+
+    return lambda seq: join(map(f, seq)) \
+        if seq_not_str(seq) else [f'Sequence (except strings) expected: {seq}']
 
 
 def cls(cls):
-    """ Returns function that checks if input is an instance of cls"""
-    return lambda obj:  isinstance(obj, cls)
+    """ Validates if input is an instance of cls."""
+    return lambda obj: [] if isinstance(obj, cls) \
+        else [f'{obj} not an instance of {cls}']
 
 
-def aligned(iter):
+def aligned(seq):
     """If all elements of iter have equal length"""
-    return same(len(i) for i in iter)
+    return [] if len(set(len(i) for i in seq)) == 1 else [f'Different lengths: {seq}']
 
 
 def approx(x,y, precision=0.00000001):
@@ -28,23 +59,11 @@ def approx(x,y, precision=0.00000001):
     return abs(x - y) < precision
 
 
-def foreach(iter, f):
-    """ Calls ``f`` for all elements of ``iterable``"""
-    for obj in iter:
-        f(obj)
-
-
-def iterable(obj):
-    """If this is iterable, ie. iter(obj) will work"""
-    return hasattr(obj, '__iter__') or hasattr(obj, '__getitem__')
-    # @todo: not all requirements checked, see https://www.programiz.com/python-programming/methods/built-in/iter
-
-
-def same(*objs):
+def same(objs):
     """ If all are equal. """
-    return len(set(objs)) == 1
+    return [] if len(set(objs)) == 1 else [f'Not equal: {objs}']
 
 
 def counter(n):
     """If n is non-negative int """
-    return isinstance(n, int) and (n >= 0)
+    return [] if isinstance(n, int) and (n >= 0) else [f'Not a positive integer: {n}']

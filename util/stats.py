@@ -5,9 +5,11 @@ import attr
 
 def probability(x):
     """ Assert x is a float within [0,1]. """
-    assert isinstance(x, float), 'Probability {} not a float but: {}'.format(x,type(x))
-    assert 0 <= x <= 1, 'Probability outside range [0,1]: {}'.format(x)
-    return True
+    if not isinstance(x, float):
+        return [f'Probability {x} not a float but: {type(x)}']
+    if not 0 <= x <= 1:
+        return [f'Probability outside range [0,1]: {x}']
+    return []
 
 
 def pmf(numbers,dim=None):

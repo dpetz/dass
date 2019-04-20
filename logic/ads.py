@@ -3,18 +3,26 @@ from util.stats import *
 
 
 paper = {
-    'names' : ('sch','dsp'),
+    'names' : ('sch', 'dsp'),
     'description' : ('search', 'display ad'),  # optional
     'activities' : (('bs',), ('tpw',)),
     'min_impress' : (.8, .8),
     'voice_share' : (.8, .4),
-    'max_freq': (100, 100)
+    'max_freq': (100, 100, 42)
+}
+
+validators = {
+    'names': seq(cls(str)),
+    'activities': seq(seq(cls(str))),
+    'min_impress': seq(probability),
+    'voice_share': seq(probability),
+    'max_freq': seq(counter)
 }
 
 
-def validate(ads):
+def validate(data):
     """
-    Asserts d is a dict with string keys:
+    Asserts d is a dict with string keys and iterable values of:
     name -- Unique name of this ad type.
     activities -- Set of Activity states on which this ad type can be shown.
     min_impress -- Minimum user impressibility required for the app to be shown (within range [0,1]).
@@ -24,16 +32,8 @@ def validate(ads):
     :return: ads
     """
 
-    signatures = {
-        'names': many(cls(str)),
-        'activities': many(many(cls(str))),
-        'min_impress': many(probability),
-        'voice_share': many(probability),
-        'max_freq': many((counter))
-    }
+    apply_assert(values(validators), data)
 
-    assert check_values(ads, signatures)
+    apply_assert(aligned, [data[k] for k in validators.keys()])
 
-    assert aligned(ads.values())
-
-    return ads
+    return data
