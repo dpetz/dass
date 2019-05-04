@@ -4,6 +4,10 @@ Implement [DASS] Digital Advertising System Simulation as a RESTful Python micro
 
 ## Project Log
 
+## May 4
+- finished refactoring all classes to maps with composable validators
+- added data from paper
+- next is DB and REST
 
 ### Apr 9
 - inspired by https://www.youtube.com/watch?v=2V1FtfBDsLU refactoring w/o classes

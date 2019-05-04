@@ -5,13 +5,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def startpage():
-    return ads()
+    return stream()
 
 
 @app.route('/stream')
 def stream():
-    from logic.activities import validate, example
-    return validate(example).__str__()
+    from logic.activities import validate, paper
+    return validate(paper).__str__()
 
 
 @app.route('/ads')

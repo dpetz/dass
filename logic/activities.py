@@ -2,22 +2,23 @@
 Specifies user browsing behavior in the absence of advertising via a first order Markov chain.
 """
 
-from util import validate, stats
+from util.validate import *
+from util.stats import *
 
 
 example = {
-    'names' : ("Search", "Visit", "Conversion", 'Churn'),
-    'initial' : (.6, .3, .1, 0.),
-    'transitions' : ((.3, .5, 0., .2), (.2, .6, .1, .1), (0., 0., 1., 0.), (0., 0., 0., 1.))
+    'names': ("Search", "Visit", "Conversion", 'Churn'),
+    'initial': (.6, .3, .1, 0.),
+    'transitions': ((.3, .5, 0., .2), (.2, .6, .1, .1), (0., 0., 1., 0.), (0., 0., 0., 1.))
 }
 
 
-def is_absorbing(transitions, index):
+def absorbing_states(transitions):
     """Checks if activity is absorbing, i.e. `transitions` probabilities to all other activity are zero."""
-    return transitions[index][index] == 1.0
+    return [s for s in range(len(transitions)) if transitions[s][s] == 1.0]
 
 
-def validate(act):
+def validate(data):
     """
     Asserts act is a dict with keys:
 
@@ -28,22 +29,24 @@ def validate(act):
     :return: `activities`
     """
 
-    names = act['names']
-    initial = act['initial']
-    trans = act['transitions']
+    n = len(data['names'])
+    pmf_n = both(validate_pmf, size(n))
 
-    types(names, str)
-    pmf(initial)
-    transition_matrix(trans)
+    valid = {
+        'names': seq(cls(str)),
+        'initial': pmf_n,
+        'transitions': seq(pmf_n, n)
+    }
 
-    # assert all dimensions fit
-    same_lengths((names, initial, trans))
+    apply(values(valid), data)
+
+    apply(aligned, [data[k] for k in valid.keys()])
 
     # assert at least on state absorbing
-    assert any(is_absorbing(transitions,i) for i in range(len(names))), \
-        'No absorbing state in {}'.format(transitions)
+    trans = data['transitions']
+    assert len(absorbing_states(trans)) > 0, f'No absorbing state in {trans}'
 
-    return activities
+    return data
 
 
 paper = {
@@ -64,19 +67,19 @@ paper = {
     # all users begin with third party website visit
     'initial': (0., 0., 0., 0., 1., 0., 0., 0.,),
 
-    'transitions' : (
-        (.01, .07, 0, .05, .33,   0,   0, .54),
-        (.01, .07, 0, .03, .34,   0,   0, .54),
-        (.01, .07, 0, .03, .33,   0, .03, .53),
-        (.01, .07, 0, .04, .33,   0, .03, .52),
-        (.01, .06, 0, .03, .32, .06,   0, .51),
-        (.01, .06, 0, .03, .32, .06,   0, .51),
-        (.01, .07, 0, .03, .34,   0,   0, .54),
-        (  0,   0, 0,   0,   0,   0,   0,   1)
+    'transitions': (
+        (.01, .07, 0., .05, .33,  0.,  0., .54),
+        (.01, .07, 0., .03, .34,  0.,  0., .55),  # modified to add up to 1
+        (.01, .07, 0., .03, .33,  0., .03, .53),
+        (.01, .07, 0., .04, .33,  0., .03, .52),
+        (.01, .06, 0., .03, .32, .06,  0., .52),  # modified to add up to 1
+        (.01, .06, 0., .03, .32, .06,  0., .52),  # modified to add up to 1
+        (.01, .07, 0., .03, .34,  0.,  0., .55),  # modified to add up to 1
+        ( 0.,  0., 0.,  0.,  0.,  0.,  0.,  1.)
     )
 }
 
-# @todo: assert at least one conversion state and at least two site visit states
+# @todo: at least two site visit states
 # @todo: assert conversions follow site visit
 # @todo: assert no transitions to ads
 # @todo user specific matrices, e.g. buyers have higher impressibility

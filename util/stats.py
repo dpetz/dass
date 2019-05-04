@@ -1,10 +1,10 @@
+""" Statistics utilities """
 import random
-from util.validate import *
-import attr
+from util import validate
 
 
-def probability(x):
-    """ Assert x is a float within [0,1]. """
+def validate_probability(x):
+    """ Validates x is a float within [0,1]. """
     if not isinstance(x, float):
         return [f'Probability {x} not a float but: {type(x)}']
     if not 0 <= x <= 1:
@@ -12,43 +12,32 @@ def probability(x):
     return []
 
 
-def pmf(numbers,dim=None):
+def approx(x, y, precision=0.00001):
+    """Tests `x == y`` within precision """
+    return abs(x - y) < precision
+
+
+def validate_pmf(numbers):
     """
-    Validates 'numbers' contains non_negative numbers summing up to 1. Returns `numbers`.
+    Validates if sequence of numbers are a probability mass function.
+    :return n: Empty list is numbers are all non_negative and sum up to 1"""
 
-    :param numbers: iterable of floats representing probabilities
-    :param dim (int or iterable): expected length of numbers  """
+    msgs = validate.seq(validate_probability)(numbers)
 
-    if iterable(dim):
-        dim = len(dim)
+    if not approx(sum(numbers), 1.0):
+        msgs.append(f'Probability distribution sums to {sum(numbers)} instead 1.0: {numbers}')
 
-    if type(dim) is int:
-        assert len(numbers) == dim, 'Expected length {}: {}'.format(dim,numbers)
-
-    forall(numbers, assert_probability)
-
-    assert approx(sum(numbers),1.0),\
-        'Numbers of probability distribution do not sum to 1.0: {}'.format(sum(numbers))
-    return True
+    return msgs
 
 
+def sample_pmf(pmf,  val=False):
+    """Draw index based on probability mass function.
+       :param pmf: passes assert_pmf
+       :param val: if input to be validated"""
 
+    if val:
+        validate.apply(validate_pmf,pmf)
 
-def transition_matrix(rows,n=0):
-    """Validates rows is a valid transition matrix for a Markov process.
-       :param rows: iterable (the rows) of iterables (the columns)
-       :param n: Expected number of states. 0 (default) if not to be checked. """
-    if n:
-        length(rows,n)
-    else:
-        n = len(rows)
-
-    return [assert_pmf(r) for r in rows if length(r,n) ]
-
-
-def sample_pmf(pmf):
-    """Draw single sample from probability mass function.
-       :param probabilities: passes assert_pmf"""
     x = random.random()
     for i, mass in enumerate(pmf):
         if x < mass:
