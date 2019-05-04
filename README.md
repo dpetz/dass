@@ -4,10 +4,21 @@ Implement [DASS] Digital Advertising System Simulation as a RESTful Python micro
 
 ## Project Log
 
+## May 4
+- finished refactoring all classes to maps with composable validators
+- added data from paper
+- next is DB and REST
+
+### Apr 9
+- inspired by https://www.youtube.com/watch?v=2V1FtfBDsLU refactoring w/o classes
+- discovering [named tuples](https://stackoverflow.com/questions/2970608/what-are-named-tuples-in-python)
+- if I still used classes [dataclassses](https://docs.python.org/3/library/dataclasses.html) could replace [attr] 
+
+
 ###  Feb 26/27
 
 - Create Ad Serving Model
-- Replace [attr] type annotations by validators and converters
+- Replace [attr] type annotations by validators and converters. I
 - Decide for [TinyDB] as a lean document database
 - simulate activity streams (w/o ads)
 
