@@ -1,31 +1,14 @@
-"""Ads"""
+"""Ad types. """
 
 from util.validate import *
 from util.stats import validate_probability as prob
 
-paper = {
-    'names': ('sch', 'dsp'),
-    'description': ('search', 'display ad'),  # optional
-    'activities': (('bs',), ('tpw',)),
-    'min_impress': (.8, .8),
-    'voice_share': (.8, .4),
-    'max_freq': (100, 100)
-}
 
-validators = {
-    'names': seq(cls(str)),
-    'activities': seq(seq(cls(str))),
-    'min_impress': seq(prob),
-    'voice_share': seq(prob),
-    'max_freq': seq(counter)
-}
-
-
-def validate(data):
+def verify_ads(data):
     """
     Asserts d is a dict with string keys and iterable values of:
     name -- Unique name of this ad type.
-    activities -- Set of Activity states on which this ad type can be shown.
+    states -- Set of Activity states on which this ad type can be shown.
     min_impress -- Minimum user impressibility required for the app to be shown (within range [0,1]).
     voice_share -- Probability that ad is actually served to an eligible target user, i.e. a users that meets
                    the minimum ``impressibility`` threshold of the ad type.
@@ -34,9 +17,22 @@ def validate(data):
     :return: ads
     """
 
-    # apply validators to values of data
-    apply(values(validators), data)
+    validators = {
+        'names': seq(cls(str)),
+        'states': seq(seq(cls(str))),
+        'min_impress': seq(prob),
+        'voice_share': seq(prob),
+        'max_freq': seq(counter)
+    }
 
-    apply(aligned, [data[k] for k in validators.keys()])
+    # apply validators to values of data
+    verify(values(validators), data)
+
+    verify(aligned, [data[k] for k in validators.keys()])
 
     return data
+
+
+def eligible_in_state(ads, state_name):
+    """Return indices of ads that can be shown during state"""
+    return [i for (i,states) in enumerate(ads['states']) if state_name in states]
