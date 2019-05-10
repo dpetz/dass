@@ -1,23 +1,42 @@
+"""..."""
+
 from flask import Flask
+
+from logic import paper
+from logic.states import verify_states
+from logic.ads import verify_ads
+from logic.simulate import streams
+
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def startpage():
-    return stream()
+    """..."""
+    return simulate()
 
 
-@app.route('/stream')
-def stream():
-    from logic.activities import validate, paper
-    return validate(paper).__str__()
+@app.route('/states')
+def states():
+    """..."""
+    paper_states = verify_states(paper.states)
+    return paper_states.__str__()
 
 
 @app.route('/ads')
 def ads():
-    from logic.ads import paper, validate
-    return validate(paper).__str__()
+    """..."""
+    paper_ads = verify_ads(paper.ads)
+    return paper_ads.__str__()
+
+
+@app.route('/simulate')
+def simulate():
+    """..."""
+    from logic.paper import states, ads, impressibilities
+    sim = streams(states, ads, impressibilities,1000)
+    return sim.__str__()
 
 
 if __name__ == '__main__':

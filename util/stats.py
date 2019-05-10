@@ -1,12 +1,12 @@
 """ Statistics utilities """
 import random
 from util import validate
-
+from util.seqs import mean
 
 def validate_probability(x):
     """ Validates x is a float within [0,1]. """
     if not isinstance(x, float):
-        return [f'Probability {x} not a float but: {type(x)}']
+        return [f'Probability {x} not a float: {type(x)}']
     if not 0 <= x <= 1:
         return [f'Probability outside range [0,1]: {x}']
     return []
@@ -19,7 +19,7 @@ def approx(x, y, precision=0.00001):
 
 def validate_pmf(numbers):
     """
-    Validates if sequence of numbers are a probability mass function.
+    Validates if sequence of numbers is a probability mass function.
     :return n: Empty list is numbers are all non_negative and sum up to 1"""
 
     msgs = validate.seq(validate_probability)(numbers)
@@ -36,7 +36,7 @@ def sample_pmf(pmf,  val=False):
        :param val: if input to be validated"""
 
     if val:
-        validate.apply(validate_pmf,pmf)
+        validate.verify(validate_pmf, pmf)
 
     x = random.random()
     for i, mass in enumerate(pmf):
@@ -44,3 +44,11 @@ def sample_pmf(pmf,  val=False):
             return i
         x -= mass
     raise ValueError('Not a distribution: {}'.format(pmf))
+
+
+def describe(iterable):
+    return {
+        'mean': mean(iterable),
+        'min': min(iterable),
+        'max': max(iterable)
+    }

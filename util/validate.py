@@ -4,9 +4,13 @@ a list of detected problems or an empty list otherwise.
 The list pattern is used to enable validator composition."""
 
 from util.seqs import seq_not_str, join
+from util import stats
 
 
-def apply(validator, data):
+prob = stats.validate_probability
+
+
+def verify(validator, data):
     """Asserts data via validator."""
     result = validator(data)
     assert not result, f'{result}'
@@ -23,14 +27,14 @@ def values(validator_dict):
 
 
 def seq(f, n=0):
-    """Creates validator applying f to all elements of an iterable."""
+    """Creates validator applying f to all elements of an iterable (but not a string)."""
 
     def seq_validator(objs):
         """Function returned"""
         if not seq_not_str(objs):
-            return [f'Sequence (except strings) expected: {objs}']
+            return [f'Sequence expected: {objs}']
         if n and n != len(objs):
-            return [f'Not length {n}: {objs}']
+            return [f'Not of length {n}: {objs}']
         return join(map(f, objs))
 
     return seq_validator
@@ -64,4 +68,4 @@ def size(n):
 
 def both(left, right):
     """Creates validator collecting results from two other validators."""
-    return lambda obj: join((left(obj),right(obj)))
+    return lambda obj: join((left(obj), right(obj)))
