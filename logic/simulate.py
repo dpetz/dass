@@ -6,10 +6,13 @@ from util.validate import verify, seq, prob
 from util.stats import describe
 
 
-
-def sample_impressibilites(impress,n):
-    """dictionary of functions for each ad that will sample impressibility for given user numbers"""
-    imp = {ad: f(n) for ad, f in impress.items()}
+def sample_impressibilites(impress_function_per_add, n):
+    """
+    :param impress_function_per_add: dictionary of functions for each ad that will
+           sample impressibility for given user numbers
+    :param n: number of users to sample for
+    """
+    imp = {ad: f(n) for ad, f in impress_function_per_add.items()}
     verify(seq(seq(prob)), list(imp.values()))
     return imp
 
@@ -49,7 +52,7 @@ def streams(states, ads, impress, n=10):
                 if impress_ad_user[ad_name][user] >= ads['min_impress'][ad]:
                     views.append((ad_name, i))
 
-            state = progress(state,states)
+            state = progress(state, states)
             stream.append(state)
 
             i += 1

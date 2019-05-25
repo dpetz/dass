@@ -4,13 +4,17 @@ Implement [DASS] Digital Advertising System Simulation as a RESTful Python micro
 
 ## Project Log
 
-## May 4
+## May
 - finished refactoring all classes to maps with composable validators
 - added data from paper
 - next is DB and REST
+- inserting and searching TinyDB super easy
+- the good: data file is plain json which is handy for debugging.
+- the bad: no indices
+- would like to switch to namedtuples but no generic enough conversion from json 
 
 ### Apr 9
-- inspired by https://www.youtube.com/watch?v=2V1FtfBDsLU refactoring w/o classes
+- inspired by [Rich Hickey](https://www.youtube.com/watch?v=2V1FtfBDsLU) refactoring w/o classes
 - discovering [named tuples](https://stackoverflow.com/questions/2970608/what-are-named-tuples-in-python)
 - if I still used classes [dataclassses](https://docs.python.org/3/library/dataclasses.html) could replace [attr] 
 

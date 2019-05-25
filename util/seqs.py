@@ -12,7 +12,7 @@ def join(iterables):
 
 
 def seq_not_str(obj):
-    """If obj is sequence but not string."""
+    """If obj is Sequence or np.ndarray but not string."""
     if isinstance(obj, str):
         return False
     return isinstance(obj, Sequence) or isinstance(obj, np.ndarray)
